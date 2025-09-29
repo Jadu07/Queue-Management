@@ -59,12 +59,9 @@ A functional system where customers can easily join and track their queue positi
 - **GET** `/serving` → Get the currently serving queue entry (by count)  
 - **GET** `/:id` → Get the status of a specific queue entry  
 
-### Admin Routes
-- **GET** `/admin/active` → Get all active queue entries (waiting or serving)
-- **GET** `/admin/stats` → Get dashboard statistics (waiting, serving, completed counts)
-- **POST** `/admin/next` → Call next customer in queue (waiting → serving)
-- **POST** `/admin/complete/:id` → Mark queue entry as completed
-- **POST** `/admin/skip/:id` → Mark queue entry as skipped
+### Admin Routes (In Progress)
+- **PUT** `/queue/:id` → Update queue item status (`waiting`, `serving`, `completed`)  
+- **DELETE** `/queue/:id` → Remove a queue item  
 
 ---
 
