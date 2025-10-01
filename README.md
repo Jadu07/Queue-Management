@@ -4,6 +4,13 @@ A full-stack queue management solution with **customer-facing web app**, **admin
 
 ---
 
+## Live Demo  
+
+- 🌐 **Customer Web App:** [queue-management-ten.vercel.app](https://queue-management-ten.vercel.app/)  
+- ⚙️ **Backend API (Serving Route):** [queue-management-6cgk.onrender.com/serving](https://queue-management-6cgk.onrender.com/serving)  
+
+---
+
 ## Project Details
 
 - **Name:** Yashraj Chouhan  
@@ -48,7 +55,7 @@ A functional system where customers can easily join and track their queue positi
 ✅ Customers can join and track their position in the queue (Web)  
 ✅ Admins can manage queue status in real time (Mobile)  
 ✅ REST API with Prisma + Supabase integration  
-✅ Resets queue token numbers daily at 5:30 AM (with timestamps)  
+✅ Resets queue token numbers daily at Midnight 
 
 ---
 
