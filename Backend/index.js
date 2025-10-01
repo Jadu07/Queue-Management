@@ -1,4 +1,6 @@
 const express =require("express")
+const cors = require("cors") 
+
 const app = express()
 
 const {createQueueEntry,getNowServingByCount,getQueueEntryStatus} = require("./Controllers/customerController.js")
@@ -8,6 +10,9 @@ app.use(express.json())
 
 const dotenv=require("dotenv")
 dotenv.config()
+
+app.use(cors()) 
+app.use(express.json())
 
 app.post("/",createQueueEntry)
 app.get("/serving",getNowServingByCount)
