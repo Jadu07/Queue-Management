@@ -72,10 +72,9 @@ function App() {
 
   return (
     <div>
-      <h2>Now Serving: #{currentServing}</h2>
       
       {!queueData ? (
-        <JoinForm onJoin={handleJoin} error={error}  /> 
+        <JoinForm onJoin={handleJoin} error={error} currentServing={currentServing} /> 
       ) : (
         <QueueTicket 
           queueData={queueData}           
