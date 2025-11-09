@@ -24,4 +24,23 @@ model QueueEntry {
   phone       String
   status      QueueStatus @default(WAITING)
   createdAt   DateTime    @default(now())
+  business    Business?   @relation(fields: [businessId], references: [id])
+  businessId  Int?
+}
+
+model Business {
+  id        Int          @id @default(autoincrement())
+  name      String
+  createdAt DateTime     @default(now())
+  admins    Admin[]
+  entries   QueueEntry[]
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  business     Business @relation(fields: [businessId], references: [id])
+  businessId   Int
+  createdAt    DateTime @default(now())
 }

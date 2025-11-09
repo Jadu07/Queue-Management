@@ -5,6 +5,8 @@ const app = express()
 
 const {createQueueEntry,getNowServingByCount,getQueueEntryStatus} = require("./Controllers/customerController.js")
 const {getActiveQueue,getDashboardStats,callNextEntry,completeEntry,skipEntry} = require("./Controllers/adminControllers.js")
+const { registerAdmin, loginAdmin } = require("./Controllers/adminAuth.js")
+const auth = require("./Middleware/auth.js")
 
 app.use(express.json())
 
@@ -14,17 +16,22 @@ dotenv.config()
 app.use(cors()) 
 app.use(express.json())
 
-app.post("/",createQueueEntry)
-app.get("/serving",getNowServingByCount)
-app.get("/:id",getQueueEntryStatus)
+// customer-facing, business-specific join link (use numeric business id)
+app.post("/join/:businessId", createQueueEntry)
+app.get("/serving/:businessId", getNowServingByCount)
+app.get("/:id", getQueueEntryStatus)
+
+// admin auth
+app.post('/admin/register', registerAdmin);
+app.post('/admin/login', loginAdmin);
 
 
 
-app.get('/admin/active', getActiveQueue);
-app.get('/admin/stats', getDashboardStats);
-app.post('/admin/next', callNextEntry);
-app.post('/admin/complete/:id', completeEntry);
-app.post('/admin/skip/:id', skipEntry);
+app.get('/admin/active', auth, getActiveQueue);
+app.get('/admin/stats', auth, getDashboardStats);
+app.post('/admin/next', auth, callNextEntry);
+app.post('/admin/complete/:id', auth, completeEntry);
+app.post('/admin/skip/:id', auth, skipEntry);
 
 
 

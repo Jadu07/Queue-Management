@@ -1,55 +1,55 @@
 const prisma = require("../DB/db.config.js")
 
 const getActiveQueue = async (req, res) => {
-    const activeQueue = await prisma.queueEntry.findMany({
-        where: { OR: [{ status: 'WAITING' }, { status: 'SERVING' }] },
-        orderBy: { createdAt: 'asc' },
-    })
+    const businessId = req.admin?.businessId
+    const where = { OR: [{ status: 'WAITING' }, { status: 'SERVING' }] }
+    if (businessId) where.businessId = businessId
+    const activeQueue = await prisma.queueEntry.findMany({ where, orderBy: { createdAt: 'asc' } })
     res.json({ status: 200, data: activeQueue })
 }
 
 const getDashboardStats = async (req, res) => {
+    const businessId = req.admin?.businessId
+    const baseWhere = businessId ? { businessId } : {}
+    const today = new Date(); today.setHours(0,0,0,0)
     const stats = {
-        waiting: await prisma.queueEntry.count({ where: { status: 'WAITING' } }),
-        serving: await prisma.queueEntry.count({ where: { status: 'SERVING' } }),
-        completedToday: await prisma.queueEntry.count({ where: { status: 'COMPLETED' } }),
+        waiting: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'WAITING' } }),
+        serving: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'SERVING' } }),
+        completedToday: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'COMPLETED', createdAt: { gte: today } } }),
     }
     res.json({ status: 200, data: stats })
 }
 
 const callNextEntry = async (req, res) => {
-    const nextInLine = await prisma.queueEntry.findFirst({
-        where: { status: 'WAITING' },
-        orderBy: { createdAt: 'asc' },
-    })
+    const businessId = req.admin?.businessId
+    const where = businessId ? { status: 'WAITING', businessId } : { status: 'WAITING' }
+    const nextInLine = await prisma.queueEntry.findFirst({ where, orderBy: { createdAt: 'asc' } })
 
-    if (!nextInLine) {
-        return res.status(404).json({ status: 404, message: 'No customers are waiting.' })
-    }
+    if (!nextInLine) return res.status(404).json({ status: 404, message: 'No customers are waiting.' })
 
-    const nowServing = await prisma.queueEntry.update({
-        where: { id: nextInLine.id },
-        data: { status: 'SERVING' },
-    })
-
+    const nowServing = await prisma.queueEntry.update({ where: { id: nextInLine.id }, data: { status: 'SERVING' } })
     res.json({ status: 200, data: nowServing, message: `Now serving #${nowServing.daily_token_number} - ${nowServing.name}.` })
 }
 
 const completeEntry = async (req, res) => {
+    const businessId = req.admin?.businessId
     const id = Number(req.params.id)
-    const updatedEntry = await prisma.queueEntry.update({
-        where: { id },
-        data: { status: 'COMPLETED' },
-    })
+    const entry = await prisma.queueEntry.findUnique({ where: { id } })
+    if (!entry) return res.status(404).json({ status: 404, message: 'Entry not found' })
+    if (businessId && entry.businessId !== businessId) return res.status(403).json({ status: 403, message: 'Forbidden' })
+
+    const updatedEntry = await prisma.queueEntry.update({ where: { id }, data: { status: 'COMPLETED' } })
     res.json({ status: 200, data: updatedEntry, message: `Entry #${updatedEntry.daily_token_number} marked as COMPLETED.` })
 }
 
 const skipEntry = async (req, res) => {
+    const businessId = req.admin?.businessId
     const id = Number(req.params.id)
-    const updatedEntry = await prisma.queueEntry.update({
-        where: { id },
-        data: { status: 'SKIPPED' },
-    })
+    const entry = await prisma.queueEntry.findUnique({ where: { id } })
+    if (!entry) return res.status(404).json({ status: 404, message: 'Entry not found' })
+    if (businessId && entry.businessId !== businessId) return res.status(403).json({ status: 403, message: 'Forbidden' })
+
+    const updatedEntry = await prisma.queueEntry.update({ where: { id }, data: { status: 'SKIPPED' } })
     res.json({ status: 200, data: updatedEntry, message: `Entry #${updatedEntry.daily_token_number} marked as SKIPPED.` })
 }
 
