@@ -8,6 +8,9 @@ const registerAdmin = async (req, res) => {
     return res.status(400).json({ status: 400, message: 'email, password and businessName are required' })
   }
 
+  const existing = await prisma.admin.findUnique({ where: { email } })
+  if (existing) return res.status(409).json({ status: 409, message: 'Admin with this email already exists' })
+
   const business = await prisma.business.create({ data: { name: businessName } })
 
   const passwordHash = await bcrypt.hash(password, 10)
