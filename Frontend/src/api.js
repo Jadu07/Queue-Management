@@ -1,5 +1,5 @@
-// const API = 'http://localhost:4000';
-const API = 'https://queue-management-6cgk.onrender.com'
+const API = 'http://localhost:4000';
+// const API = 'https://queue-management-6cgk.onrender.com'
 
 async function joinQueue(name, phone, businessId) {
   const url = businessId ? `${API}/join/${businessId}` : `${API}/`;
