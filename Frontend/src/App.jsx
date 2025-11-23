@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import JoinForm from './components/JoinForm';
 import QueueTicket from './components/QueueTicket';
 import { joinQueue, getServing, getStatus, getBusinessDetails } from './api';
 
 function App() {
   const { businessId } = useParams();
+  const navigate = useNavigate();
   const [queueData, setQueueData] = useState(null);     
   const [currentServing, setCurrentServing] = useState(0); 
   const [error, setError] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [joiningLoading, setJoiningLoading] = useState(false);                
+  const [joiningLoading, setJoiningLoading] = useState(false);
+  const [businessNotFound, setBusinessNotFound] = useState(false);                
 
   useEffect(() => {
     const saved = localStorage.getItem('queueData');     
@@ -29,25 +31,31 @@ function App() {
   useEffect(() => {
     if (businessId) {
       setIsLoading(true);
+      setBusinessNotFound(false);
       console.log('Fetching business details for ID:', businessId);
       getBusinessDetails(businessId).then(res => {
         console.log('Business details response:', res);
         if (res.status === 200 && res.data) {
           console.log('Setting business name:', res.data.name);
           setBusinessName(res.data.name);
+          setBusinessNotFound(false);
+        } else if (res.status === 404) {
+          setBusinessNotFound(true);
+          navigate('/enter-business-id');
         }
         setIsLoading(false);
       }).catch(err => {
         console.error('Failed to fetch business details:', err);
         setBusinessName('');
+        setBusinessNotFound(true);
         setIsLoading(false);
+        navigate('/enter-business-id');
       });
     } else {
       console.log('No businessId provided');
-      setBusinessName('');
-      setIsLoading(false);
+      navigate('/enter-business-id');
     }
-  }, [businessId]);
+  }, [businessId, navigate]);
 
   
   useEffect(() => {
