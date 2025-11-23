@@ -1,8 +1,31 @@
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8fafc;
+.business-header {
+    text-align: center;
+    background: #eef2ff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 0 0 5px #ffffff;
+    max-width: 420px;
+    width: 100%;
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .business-header:hover {
+    box-shadow: 0 4px 12px rgba(165, 180, 252, 0.4);
+  }
+
+  .business-name {
+    color: #1e293b;
+    font-size: 1.75rem;
+    font-weight: 600;
     margin: 0;
-    padding: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #ffffff;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
   }
   
   .queue-container {
@@ -93,15 +116,35 @@ body {
 
   @media (max-width: 640px) {
     .queue-container {
-      padding: 1.25rem 0.75rem;
-      gap: 1.25rem;
+      padding: 1rem;
+      gap: 1rem;
       min-height: auto;
+    }
+
+    .business-header {
+      width: 100%;
+      max-width: 100%;
+      padding: 1.5rem 1rem;
+      min-height: 70px;
+      box-sizing: border-box;
+    }
+
+    .business-label {
+      font-size: 0.65rem;
+    }
+
+    .business-name {
+      font-size: 1.3rem;
+      padding-bottom: 0.4rem;
     }
 
     .queue-status-card,
     .queue-join-card {
+      width: 100%;
+      max-width: 100%;
       padding: 1rem 0.9rem;
       border-radius: 12px;
+      box-sizing: border-box;
     }
 
     .queue-number {
@@ -126,6 +169,15 @@ body {
   }
 
   @media (max-width: 380px) {
+    .business-header {
+      padding: 1.2rem 0.8rem;
+      min-height: 60px;
+    }
+
+    .business-name {
+      font-size: 1.1rem;
+    }
+
     .queue-status-card,
     .queue-join-card {
       padding: 0.8rem;

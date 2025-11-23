@@ -8,6 +8,40 @@
     min-height: 100vh;
     gap: 20px;
   }
+
+  .business-name-card {
+    width: 90%;
+    max-width: 460px;
+    text-align: center;
+    background: #eef2ff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 0 0 5px #ffffff;
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .business-label {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .business-title {
+    color: #1e293b;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #ffffff;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
   
   .status-card {
     width: 90%;
@@ -162,8 +196,25 @@
   @media (max-width: 640px) {
     .queue-container {
       padding: 16px;
-      gap: 14px;
+      gap: 16px;
       min-height: auto;
+    }
+
+    .business-name-card {
+      width: 100%;
+      max-width: 100%;
+      padding: 1.5rem 1rem;
+      min-height: 70px;
+      box-sizing: border-box;
+    }
+
+    .business-label {
+      font-size: 0.65rem;
+    }
+
+    .business-title {
+      font-size: 1.3rem;
+      padding-bottom: 0.4rem;
     }
 
     .status-card,
@@ -237,6 +288,15 @@
   }
 
   @media (max-width: 380px) {
+    .business-name-card {
+      padding: 1.2rem 0.8rem;
+      min-height: 60px;
+    }
+
+    .business-title {
+      font-size: 1.1rem;
+    }
+
     .serving-number {
       font-size: 24px;
     }

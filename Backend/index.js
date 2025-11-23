@@ -3,7 +3,7 @@ const cors = require("cors")
 
 const app = express()
 
-const {createQueueEntry,getNowServingByCount,getQueueEntryStatus} = require("./Controllers/customerController.js")
+const {createQueueEntry,getNowServingByCount,getQueueEntryStatus,getBusinessDetails} = require("./Controllers/customerController.js")
 const {getActiveQueue,getDashboardStats,callNextEntry,completeEntry,skipEntry} = require("./Controllers/adminControllers.js")
 const { registerAdmin, loginAdmin } = require("./Controllers/adminAuth.js")
 const auth = require("./Middleware/auth.js")
@@ -19,6 +19,7 @@ app.use(express.json())
 // customer-facing, business-specific join link (use numeric business id)
 app.post("/join/:businessId", createQueueEntry)
 app.get("/serving/:businessId", getNowServingByCount)
+app.get("/business/:businessId", getBusinessDetails)
 app.get("/:id", getQueueEntryStatus)
 
 // admin auth

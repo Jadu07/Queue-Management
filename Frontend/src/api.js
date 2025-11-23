@@ -1,7 +1,8 @@
-const API = 'https://queue-management-6cgk.onrender.com';
+const API = 'http://localhost:4000';
 
-async function joinQueue(name, phone) {
-  const res = await fetch(`${API}/`, {
+async function joinQueue(name, phone, businessId) {
+  const url = businessId ? `${API}/join/${businessId}` : `${API}/`;
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, phone }),
@@ -10,8 +11,9 @@ async function joinQueue(name, phone) {
 
 }
 
-async function getServing() {
-  const res = await fetch(`${API}/serving`);
+async function getServing(businessId) {
+  const url = businessId ? `${API}/serving/${businessId}` : `${API}/serving`;
+  const res = await fetch(url);
   return await res.json();
 }
 
@@ -20,4 +22,9 @@ async function getStatus(id) {
   return await res.json();
 }
 
-export { joinQueue, getServing, getStatus };
+async function getBusinessDetails(businessId) {
+  const res = await fetch(`${API}/business/${businessId}`);
+  return await res.json();
+}
+
+export { joinQueue, getServing, getStatus, getBusinessDetails };

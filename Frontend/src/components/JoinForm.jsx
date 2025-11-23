@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import './JoinForm.css';
 
-function JoinForm({ onJoin, currentServing }) {
+function JoinForm({ onJoin, currentServing, businessName, isLoading, joiningLoading }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -12,6 +13,18 @@ function JoinForm({ onJoin, currentServing }) {
 
   return (
     <div className="queue-container">
+      {businessName || isLoading ? (
+        <div className="business-header">
+          {isLoading ? (
+            <Loader2 style={{ width: '32px', height: '32px', color: '#6366f1', animation: 'spin 1s linear infinite' }} />
+          ) : (
+            <div>
+              <p style={{ margin: '0 0 0.25rem', fontSize: '0.75rem', fontWeight: '500', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Business Name</p>
+              <h1 className="business-name">{businessName}</h1>
+            </div>
+          )}
+        </div>
+      ) : null}
       <div className="queue-status-card">
         <h2 className="queue-title">Queue Status</h2>
         <div className="queue-box">
@@ -41,7 +54,16 @@ function JoinForm({ onJoin, currentServing }) {
             required
           />
 
-          <button type="submit" className="join-btn">✓ Join Queue</button>
+          <button type="submit" className="join-btn" disabled={joiningLoading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            {joiningLoading ? (
+              <>
+                <Loader2 style={{ width: '20px', height: '20px', animation: 'spin 1s linear infinite' }} />
+                Joining...
+              </>
+            ) : (
+              <>✓ Join Queue</>
+            )}
+          </button>
         </form>
       </div>
     </div>
