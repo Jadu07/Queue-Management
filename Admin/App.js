@@ -1,24 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
-
+import { useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AuthScreen from './components/AuthScreen';
-import HomePage from './HomePage';
+import HomePage from './components/HomePage';
+import BottomNav from './components/BottomNav';
+import QRScreen from './components/QRScreen';
+import Settings from './components/Settings';
 
 function AppContent() {
   const { user, loading } = useAuth();
+
+  const [tab, setTab] = useState('home');
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" />
-        <HomePage />
       </View>
     );
   }
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <AuthScreen />
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
+
+  let Screen = null;
+  if (tab === 'home') Screen = <HomePage />;
+  else if (tab === 'qr') Screen = <QRScreen />;
+  else if (tab === 'settings') Screen = <Settings />;
   return (
+    
     <View style={styles.container}>
-      {user ? <HomePage /> : <AuthScreen />}
+      <View style={{ flex: 1 }}>{Screen}</View>
+      <BottomNav current={tab} setCurrent={setTab} />
       <StatusBar style="auto" />
     </View>
   );
@@ -38,6 +59,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,
