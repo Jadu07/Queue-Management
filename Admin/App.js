@@ -3,11 +3,11 @@ import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import AuthScreen from './components/AuthScreen';
-import HomePage from './components/HomePage';
+import AuthScreen from './screens/AuthScreen';
+import HomePage from './screens/HomePage';
 import BottomNav from './components/BottomNav';
-import QRScreen from './components/QRScreen';
-import Settings from './components/Settings';
+import QRScreen from './screens/QRScreen';
+import Settings from './screens/Settings';
 
 function AppContent() {
   const { user, loading } = useAuth();

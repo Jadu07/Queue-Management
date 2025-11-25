@@ -37,7 +37,10 @@ const loginAdmin = async (req, res) => {
   if (!secret) return res.status(500).json({ status: 500, message: 'JWT secret not configured' })
   const accessToken = jwt.sign({ id: admin.id, email: admin.email, businessId: admin.businessId }, secret, { expiresIn: '7d' })
 
-  return res.json({ status: 200, data: { token: accessToken } })
+  // Fetch business details
+  const business = await prisma.business.findUnique({ where: { id: admin.businessId } })
+
+  return res.json({ status: 200, data: { admin: { id: admin.id, email: admin.email }, business: { id: business.id, name: business.name }, token: accessToken } })
 }
 
 module.exports = { registerAdmin, loginAdmin }

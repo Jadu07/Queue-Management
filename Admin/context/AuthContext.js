@@ -25,8 +25,10 @@ export function AuthProvider(props) {
     return axios.post('http://localhost:4000/admin/login', { email, password })
       .then(res => {
         let token = res.data.data.token
+        let admin = res.data.data.admin
+        let business = res.data.data.business
         AsyncStorage.setItem('token', token)
-        let u = { email }
+        let u = { email: admin.email, businessName: business.name, businessId: business.id }
         AsyncStorage.setItem('user', JSON.stringify(u))
         setUser(u)
         return { success: true }

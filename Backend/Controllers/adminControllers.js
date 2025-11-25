@@ -53,11 +53,18 @@ const skipEntry = async (req, res) => {
     res.json({ status: 200, data: updatedEntry, message: `Entry #${updatedEntry.daily_token_number} marked as SKIPPED.` })
 }
 
+const getNextEntry = async (req, res) => {
+    const businessId = req.admin?.businessId
+    const where = businessId ? { status: 'WAITING', businessId } : { status: 'WAITING' }
+    const nextEntry = await prisma.queueEntry.findFirst({ where, orderBy: { createdAt: 'asc' } })
+    res.json({ status: 200, data: nextEntry })
+}
 
 module.exports = { 
     getActiveQueue,
     getDashboardStats,
     callNextEntry, 
     completeEntry,
-    skipEntry
+    skipEntry,
+    getNextEntry
 }
