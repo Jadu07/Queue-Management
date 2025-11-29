@@ -51,7 +51,7 @@ const getNowServingByCount = async (req, res) => {
 
     const countWhere = {
         createdAt: { gte: today },
-        OR: [{ status: 'COMPLETED' }, { status: 'SKIPPED' }]
+        OR: [{ status: 'COMPLETED' }, { status: 'SKIPPED' }, { status: 'SERVING' }]
     }
     if (business) countWhere.businessId = business.id
 

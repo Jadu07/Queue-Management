@@ -7,7 +7,7 @@ import './QueueTicket.css';
 function QueueTicket({ queueData, currentServing, onReset, businessName, isLoading }) {
   if (!queueData) return null;
 
-  const position = Math.max(0, queueData.queueNumber - currentServing - 1);
+  const position = Math.max(0, queueData.queueNumber - (currentServing || 1));
 
   return (
     <div className="queue-container">
