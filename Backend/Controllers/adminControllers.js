@@ -70,11 +70,35 @@ const getNextEntry = async (req, res) => {
     res.json({ status: 200, data: nextEntry })
 }
 
+const getWaitingList = async (req, res) => {
+    const businessId = req.admin?.businessId
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const where = {
+        status: 'WAITING',
+        createdAt: { gte: today }
+    }
+    if (businessId) where.businessId = businessId
+
+    const waitingList = await prisma.queueEntry.findMany({
+        where,
+        orderBy: { createdAt: 'asc' },
+        select: {
+            id: true,
+            name: true,
+            phone: true,
+            daily_token_number: true,
+            createdAt: true
+        }
+    })
+    res.json({ status: 200, data: waitingList })
+}
+
 module.exports = {
     getActiveQueue,
     getDashboardStats,
     callNextEntry,
     completeEntry,
     skipEntry,
-    getNextEntry
+    getNextEntry,
+    getWaitingList
 }

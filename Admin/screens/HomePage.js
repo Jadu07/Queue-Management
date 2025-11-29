@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import HomeBusinessCardHeader from '../components/home_BusinessCardHeader'
 import HomeStatisticsCards from '../components/home_StatisticsCards'
-import HomeQuickActionsCard from '../components/home_QuickActionsCard'
+import HomeWaitingList from '../components/home_WaitingList'
 import HomeCurrentServingCard from '../components/home_CurrentServingCard'
 
 export default function HomePage() {
@@ -97,7 +97,7 @@ export default function HomePage() {
           loading={actionLoading}
         />
 
-        <HomeQuickActionsCard />
+        <HomeWaitingList refreshTrigger={stats} />
       </ScrollView>
     </View>
   )
