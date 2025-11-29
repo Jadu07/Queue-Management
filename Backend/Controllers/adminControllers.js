@@ -17,7 +17,6 @@ const getDashboardStats = async (req, res) => {
     const baseWhere = businessId ? { businessId } : {}
     const today = new Date(); today.setHours(0, 0, 0, 0)
 
-    // Get the current serving entry to show its token number
     const currentServingEntry = await prisma.queueEntry.findFirst({
         where: { ...baseWhere, status: 'SERVING', createdAt: { gte: today } }
     })
@@ -25,6 +24,7 @@ const getDashboardStats = async (req, res) => {
     const stats = {
         waiting: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'WAITING', createdAt: { gte: today } } }),
         serving: currentServingEntry ? currentServingEntry.daily_token_number : 0,
+        currentServing: currentServingEntry, // Full object for the UI box
         completedToday: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'COMPLETED', createdAt: { gte: today } } }),
     }
     res.json({ status: 200, data: stats })

@@ -6,11 +6,13 @@ import axios from 'axios'
 import HomeBusinessCardHeader from '../components/home_BusinessCardHeader'
 import HomeStatisticsCards from '../components/home_StatisticsCards'
 import HomeQuickActionsCard from '../components/home_QuickActionsCard'
+import HomeCurrentServingCard from '../components/home_CurrentServingCard'
 
 export default function HomePage() {
   const { user } = useAuth()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
     fetchStats()
@@ -24,7 +26,52 @@ export default function HomePage() {
       })
       setStats(response.data.data)
     }
-    setLoading(false) 
+    setLoading(false)
+  }
+
+  const handleAction = async (action, id) => {
+    if (actionLoading) return
+    setActionLoading(true)
+
+    try {
+      const token = await AsyncStorage.getItem('token')
+      if (token) {
+        const headers = { Authorization: `Bearer ${token}` }
+        await axios.post(`http://localhost:4000/admin/${action}/${id}`, {}, { headers })
+
+        try {
+          await axios.post('http://localhost:4000/admin/next', {}, { headers })
+        } catch (error) {
+          if (error.response?.status === 404) {
+            alert("No customers waiting")
+          }
+        }
+        await fetchStats()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    setActionLoading(false)
+  }
+
+  const handleStartServing = async () => {
+    if (actionLoading) return
+    setActionLoading(true)
+
+    try {
+      const token = await AsyncStorage.getItem('token')
+      if (token) {
+        await axios.post('http://localhost:4000/admin/next', {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        await fetchStats()
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert("No customers waiting")
+      }
+    }
+    setActionLoading(false)
   }
 
   if (loading) {
@@ -41,6 +88,15 @@ export default function HomePage() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <HomeBusinessCardHeader user={user} />
         <HomeStatisticsCards stats={stats} />
+
+        <HomeCurrentServingCard
+          currentServing={stats?.currentServing}
+          onSkip={(id) => handleAction('skip', id)}
+          onComplete={(id) => handleAction('complete', id)}
+          onStart={handleStartServing}
+          loading={actionLoading}
+        />
+
         <HomeQuickActionsCard />
       </ScrollView>
     </View>
