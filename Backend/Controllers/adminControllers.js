@@ -2,8 +2,8 @@ const prisma = require("../DB/db.config.js")
 
 const getActiveQueue = async (req, res) => {
     const businessId = req.admin?.businessId
-    const today = new Date(); today.setHours(0,0,0,0)
-    const where = { 
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const where = {
         OR: [{ status: 'WAITING' }, { status: 'SERVING' }],
         createdAt: { gte: today }
     }
@@ -15,10 +15,16 @@ const getActiveQueue = async (req, res) => {
 const getDashboardStats = async (req, res) => {
     const businessId = req.admin?.businessId
     const baseWhere = businessId ? { businessId } : {}
-    const today = new Date(); today.setHours(0,0,0,0)
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+
+    // Get the current serving entry to show its token number
+    const currentServingEntry = await prisma.queueEntry.findFirst({
+        where: { ...baseWhere, status: 'SERVING', createdAt: { gte: today } }
+    })
+
     const stats = {
-        waiting: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'WAITING' } }),
-        serving: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'SERVING' } }),
+        waiting: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'WAITING', createdAt: { gte: today } } }),
+        serving: currentServingEntry ? currentServingEntry.daily_token_number : 0,
         completedToday: await prisma.queueEntry.count({ where: { ...baseWhere, status: 'COMPLETED', createdAt: { gte: today } } }),
     }
     res.json({ status: 200, data: stats })
@@ -64,10 +70,10 @@ const getNextEntry = async (req, res) => {
     res.json({ status: 200, data: nextEntry })
 }
 
-module.exports = { 
+module.exports = {
     getActiveQueue,
     getDashboardStats,
-    callNextEntry, 
+    callNextEntry,
     completeEntry,
     skipEntry,
     getNextEntry
