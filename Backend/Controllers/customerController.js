@@ -56,7 +56,7 @@ const getNowServingByCount = async (req, res) => {
     if (business) countWhere.businessId = business.id
 
     const processedCount = await prisma.queueEntry.count({ where: countWhere })
-    const nowServingNumber = processedCount + 1
+    const nowServingNumber = processedCount
     return res.json({ status: 200, data: { current_token_number: nowServingNumber } })
 }
 
