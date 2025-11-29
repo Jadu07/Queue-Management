@@ -2,7 +2,11 @@ const prisma = require("../DB/db.config.js")
 
 const getActiveQueue = async (req, res) => {
     const businessId = req.admin?.businessId
-    const where = { OR: [{ status: 'WAITING' }, { status: 'SERVING' }] }
+    const today = new Date(); today.setHours(0,0,0,0)
+    const where = { 
+        OR: [{ status: 'WAITING' }, { status: 'SERVING' }],
+        createdAt: { gte: today }
+    }
     if (businessId) where.businessId = businessId
     const activeQueue = await prisma.queueEntry.findMany({ where, orderBy: { createdAt: 'asc' } })
     res.json({ status: 200, data: activeQueue })

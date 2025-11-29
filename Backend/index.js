@@ -1,19 +1,19 @@
-const express =require("express")
-const cors = require("cors") 
+const express = require("express")
+const cors = require("cors")
 
 const app = express()
 
-const {createQueueEntry,getNowServingByCount,getQueueEntryStatus,getBusinessDetails} = require("./Controllers/customerController.js")
-const {getActiveQueue,getDashboardStats,callNextEntry,completeEntry,skipEntry,getNextEntry} = require("./Controllers/adminControllers.js")
+const { createQueueEntry, getNowServingByCount, getQueueEntryStatus, getBusinessDetails } = require("./Controllers/customerController.js")
+const { getActiveQueue, getDashboardStats, callNextEntry, completeEntry, skipEntry, getNextEntry } = require("./Controllers/adminControllers.js")
 const { registerAdmin, loginAdmin } = require("./Controllers/adminAuth.js")
 const auth = require("./Middleware/auth.js")
 
 app.use(express.json())
 
-const dotenv=require("dotenv")
+const dotenv = require("dotenv")
 dotenv.config()
 
-app.use(cors()) 
+app.use(cors())
 app.use(express.json())
 
 // customer-facing, business-specific join link (use numeric business id)
@@ -38,6 +38,9 @@ app.post('/admin/skip/:id', auth, skipEntry);
 
 
 const PORT = process.env.PORT || 4001;
+
+const initCronJobs = require('./cronJobs');
+initCronJobs();
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
