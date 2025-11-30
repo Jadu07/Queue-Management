@@ -16,11 +16,6 @@ export default function BottomNav({ current, setCurrent }) {
         <Text style={[styles.label, current === 'qr' && styles.active]}>QR</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item} onPress={() => setCurrent('history')}>
-        <MaterialIcons name="history" size={24} color={current === 'history' ? '#222' : '#aaa'} />
-        <Text style={[styles.label, current === 'history' && styles.active]}>History</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.item} onPress={() => setCurrent('settings')}>
         <Ionicons name="settings-outline" size={24} color={current === 'settings' ? '#222' : '#aaa'} />
         <Text style={[styles.label, current === 'settings' && styles.active]}>Settings</Text>
