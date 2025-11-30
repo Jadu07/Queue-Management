@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AuthScreen from './screens/AuthScreen';
@@ -13,6 +13,10 @@ function AppContent() {
   const { user, loading } = useAuth();
 
   const [tab, setTab] = useState('home');
+
+  useEffect(() => {
+    if (!user) setTab('home');
+  }, [user]);
 
   if (loading) {
     return (
@@ -36,7 +40,7 @@ function AppContent() {
   else if (tab === 'qr') Screen = <QRScreen />;
   else if (tab === 'settings') Screen = <Settings />;
   return (
-    
+
     <View style={styles.container}>
       <View style={{ flex: 1 }}>{Screen}</View>
       <BottomNav current={tab} setCurrent={setTab} />
