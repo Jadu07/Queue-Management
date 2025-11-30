@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { Text, IconButton } from 'react-native-paper'
+import { Text, IconButton, ActivityIndicator } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 
@@ -10,6 +10,8 @@ const HomeWaitingList = ({ refreshTrigger }) => {
     const { backend_link } = useAuth()
     const [list, setList] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const [prioritizingId, setPrioritizingId] = useState(null)
 
     useEffect(() => {
         AsyncStorage.getItem('token').then(token => {
@@ -22,13 +24,15 @@ const HomeWaitingList = ({ refreshTrigger }) => {
     }, [refreshTrigger])
 
     const prioritize = async (id) => {
+        setPrioritizingId(id)
         const token = await AsyncStorage.getItem('token')
         await axios.post(`${backend_link}/admin/prioritize/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
         const res = await axios.get(`${backend_link}/admin/waiting`, { headers: { Authorization: `Bearer ${token}` } })
         setList(res.data.data)
+        setPrioritizingId(null)
     }
 
-    if (loading && !list.length) return <View style={styles.section}><Text style={styles.title}>Waiting List</Text><Text style={styles.empty}>Loading...</Text></View>
+    if (loading && !list.length) return <View style={styles.section}><Text style={styles.title}>Waiting List</Text><View style={styles.emptyBox}><ActivityIndicator animating={true} color="#6750a4" /></View></View>
 
     return (
         <View style={styles.section}>
@@ -41,7 +45,15 @@ const HomeWaitingList = ({ refreshTrigger }) => {
                         <View style={styles.row}>
                             <View style={styles.badge}><Text style={styles.badgeTxt}>{item.daily_token_number}</Text></View>
                             <View style={styles.info}><Text style={styles.name}>{item.name}</Text><Text style={styles.phone}>{item.phone}</Text></View>
-                            {index > 0 && <IconButton icon="arrow-up-bold-circle" iconColor="#6750a4" size={24} onPress={() => prioritize(item.id)} />}
+                            {index > 0 && (
+                                <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}>
+                                    {prioritizingId === item.id ? (
+                                        <ActivityIndicator animating={true} color="#6750a4" size={24} />
+                                    ) : (
+                                        <IconButton icon="arrow-up-bold-circle" iconColor="#6750a4" size={24} onPress={() => prioritize(item.id)} />
+                                    )}
+                                </View>
+                            )}
                         </View>
                     )} />
                 </View>

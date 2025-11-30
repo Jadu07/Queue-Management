@@ -15,7 +15,7 @@ function AppContent() {
   const [tab, setTab] = useState('home');
 
   useEffect(() => {
-    if (!user) setTab('home');
+    if (user) setTab('home');
   }, [user]);
 
   if (loading) {

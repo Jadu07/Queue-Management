@@ -9,7 +9,7 @@ export function AuthProvider(props) {
 
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const backend_link = 'http://localhost:4000'
+  const backend_link = 'https://queue-management-backend.vercel.app'
 
   useEffect(() => {
     AsyncStorage.getItem('token').then(token => {
