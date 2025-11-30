@@ -4,14 +4,17 @@ import { Text, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 
+import { useAuth } from '../context/AuthContext'
+
 const HomeWaitingList = ({ refreshTrigger }) => {
+    const { backend_link } = useAuth()
     const [list, setList] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         AsyncStorage.getItem('token').then(token => {
             if (!token) return setLoading(false)
-            axios.get('http://localhost:4000/admin/waiting', { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(`${backend_link}/admin/waiting`, { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => setList(res.data.data))
                 .catch(() => { })
                 .finally(() => setLoading(false))
@@ -20,8 +23,8 @@ const HomeWaitingList = ({ refreshTrigger }) => {
 
     const prioritize = async (id) => {
         const token = await AsyncStorage.getItem('token')
-        await axios.post(`http://localhost:4000/admin/prioritize/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
-        const res = await axios.get('http://localhost:4000/admin/waiting', { headers: { Authorization: `Bearer ${token}` } })
+        await axios.post(`${backend_link}/admin/prioritize/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+        const res = await axios.get(`${backend_link}/admin/waiting`, { headers: { Authorization: `Bearer ${token}` } })
         setList(res.data.data)
     }
 

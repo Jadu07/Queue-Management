@@ -9,7 +9,7 @@ import HomeWaitingList from '../components/home_WaitingList'
 import HomeCurrentServingCard from '../components/home_CurrentServingCard'
 
 export default function HomePage() {
-  const { user } = useAuth()
+  const { user, backend_link } = useAuth()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
@@ -21,7 +21,7 @@ export default function HomePage() {
   const fetchStats = async () => {
     const token = await AsyncStorage.getItem('token')
     if (token) {
-      const response = await axios.get('http://localhost:4000/admin/stats', {
+      const response = await axios.get(`${backend_link}/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setStats(response.data.data)
@@ -37,10 +37,10 @@ export default function HomePage() {
       const token = await AsyncStorage.getItem('token')
       if (token) {
         const headers = { Authorization: `Bearer ${token}` }
-        await axios.post(`http://localhost:4000/admin/${action}/${id}`, {}, { headers })
+        await axios.post(`${backend_link}/admin/${action}/${id}`, {}, { headers })
 
         try {
-          await axios.post('http://localhost:4000/admin/next', {}, { headers })
+          await axios.post(`${backend_link}/admin/next`, {}, { headers })
         } catch (error) {
           if (error.response?.status === 404) {
             alert("No customers waiting")
@@ -61,7 +61,7 @@ export default function HomePage() {
     try {
       const token = await AsyncStorage.getItem('token')
       if (token) {
-        await axios.post('http://localhost:4000/admin/next', {}, {
+        await axios.post(`${backend_link}/admin/next`, {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
         await fetchStats()

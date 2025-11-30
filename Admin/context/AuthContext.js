@@ -9,6 +9,7 @@ export function AuthProvider(props) {
 
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const backend_link = 'http://localhost:4000'
 
   useEffect(() => {
     AsyncStorage.getItem('token').then(token => {
@@ -22,7 +23,7 @@ export function AuthProvider(props) {
   }, [])
 
   function login(email, password) {
-    return axios.post('http://localhost:4000/admin/login', { email, password })
+    return axios.post(`${backend_link}/admin/login`, { email, password })
       .then(res => {
         let token = res.data.data.token
         let admin = res.data.data.admin
@@ -39,7 +40,7 @@ export function AuthProvider(props) {
   }
 
   function signup(email, password, businessName) {
-    return axios.post('http://localhost:4000/admin/register', { email, password, businessName })
+    return axios.post(`${backend_link}/admin/register`, { email, password, businessName })
       .then(res => {
         let token = res.data.data.token
         let admin = res.data.data.admin
@@ -60,9 +61,9 @@ export function AuthProvider(props) {
     AsyncStorage.removeItem('user')
     setUser(null)
   }
-  
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, loading, backend_link }}>
       {props.children}
     </AuthContext.Provider>
   )
