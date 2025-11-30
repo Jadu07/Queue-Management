@@ -8,6 +8,7 @@ import HomePage from './screens/HomePage';
 import BottomNav from './components/BottomNav';
 import QRScreen from './screens/QRScreen';
 import Settings from './screens/Settings';
+import History from './screens/History';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -38,6 +39,7 @@ function AppContent() {
   let Screen = null;
   if (tab === 'home') Screen = <HomePage />;
   else if (tab === 'qr') Screen = <QRScreen />;
+  else if (tab === 'history') Screen = <History />;
   else if (tab === 'settings') Screen = <Settings />;
   return (
 

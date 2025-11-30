@@ -116,6 +116,17 @@ const prioritizeEntry = async (req, res) => {
     res.json({ status: 200, message: "Prioritized" })
 }
 
+const getHistory = async (req, res) => {
+    const businessId = req.admin?.businessId
+    const where = businessId ? { businessId } : {}
+
+    const history = await prisma.queueEntry.findMany({
+        where,
+        orderBy: { createdAt: 'desc' }
+    })
+    res.json({ status: 200, data: history })
+}
+
 module.exports = {
     getActiveQueue,
     getDashboardStats,
@@ -124,5 +135,6 @@ module.exports = {
     skipEntry,
     getNextEntry,
     getWaitingList,
-    prioritizeEntry
+    prioritizeEntry,
+    getHistory
 }
