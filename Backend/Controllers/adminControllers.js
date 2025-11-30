@@ -8,7 +8,7 @@ const getActiveQueue = async (req, res) => {
         createdAt: { gte: today }
     }
     if (businessId) where.businessId = businessId
-    const activeQueue = await prisma.queueEntry.findMany({ where, orderBy: { createdAt: 'asc' } })
+    const activeQueue = await prisma.queueEntry.findMany({ where, orderBy: [{ priority: 'desc' }, { daily_token_number: 'asc' }] })
     res.json({ status: 200, data: activeQueue })
 }
 
@@ -33,7 +33,7 @@ const getDashboardStats = async (req, res) => {
 const callNextEntry = async (req, res) => {
     const businessId = req.admin?.businessId
     const where = businessId ? { status: 'WAITING', businessId } : { status: 'WAITING' }
-    const nextInLine = await prisma.queueEntry.findFirst({ where, orderBy: { createdAt: 'asc' } })
+    const nextInLine = await prisma.queueEntry.findFirst({ where, orderBy: [{ priority: 'desc' }, { daily_token_number: 'asc' }] })
 
     if (!nextInLine) return res.status(404).json({ status: 404, message: 'No customers are waiting.' })
 
@@ -66,7 +66,7 @@ const skipEntry = async (req, res) => {
 const getNextEntry = async (req, res) => {
     const businessId = req.admin?.businessId
     const where = businessId ? { status: 'WAITING', businessId } : { status: 'WAITING' }
-    const nextEntry = await prisma.queueEntry.findFirst({ where, orderBy: { createdAt: 'asc' } })
+    const nextEntry = await prisma.queueEntry.findFirst({ where, orderBy: [{ priority: 'desc' }, { daily_token_number: 'asc' }] })
     res.json({ status: 200, data: nextEntry })
 }
 
@@ -81,16 +81,39 @@ const getWaitingList = async (req, res) => {
 
     const waitingList = await prisma.queueEntry.findMany({
         where,
-        orderBy: { createdAt: 'asc' },
+        orderBy: [
+            { priority: 'desc' },
+            { daily_token_number: 'asc' }
+        ],
         select: {
             id: true,
             name: true,
             phone: true,
             daily_token_number: true,
-            createdAt: true
+            createdAt: true,
+            priority: true
         }
     })
     res.json({ status: 200, data: waitingList })
+}
+
+const prioritizeEntry = async (req, res) => {
+    const { id } = req.params
+    const businessId = req.admin?.businessId
+
+    // Find current highest priority
+    const maxPriorityEntry = await prisma.queueEntry.findFirst({
+        where: { businessId, status: 'WAITING' },
+        orderBy: { priority: 'desc' }
+    })
+
+    const newPriority = (maxPriorityEntry?.priority || 0) + 1
+
+    await prisma.queueEntry.update({
+        where: { id: parseInt(id) },
+        data: { priority: newPriority }
+    })
+    res.json({ status: 200, message: "Prioritized" })
 }
 
 module.exports = {
@@ -100,5 +123,6 @@ module.exports = {
     completeEntry,
     skipEntry,
     getNextEntry,
-    getWaitingList
+    getWaitingList,
+    prioritizeEntry
 }

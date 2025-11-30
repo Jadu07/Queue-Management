@@ -4,7 +4,7 @@ const cors = require("cors")
 const app = express()
 
 const { createQueueEntry, getNowServingByCount, getQueueEntryStatus, getBusinessDetails } = require("./Controllers/customerController.js")
-const { getActiveQueue, getDashboardStats, callNextEntry, completeEntry, skipEntry, getNextEntry, getWaitingList } = require("./Controllers/adminControllers.js")
+const { getActiveQueue, getDashboardStats, callNextEntry, completeEntry, skipEntry, getNextEntry, getWaitingList, prioritizeEntry } = require("./Controllers/adminControllers.js")
 const { registerAdmin, loginAdmin } = require("./Controllers/adminAuth.js")
 const auth = require("./Middleware/auth.js")
 
@@ -35,6 +35,7 @@ app.get('/admin/next-entry', auth, getNextEntry);
 app.post('/admin/next', auth, callNextEntry);
 app.post('/admin/complete/:id', auth, completeEntry);
 app.post('/admin/skip/:id', auth, skipEntry);
+app.post('/admin/prioritize/:id', auth, prioritizeEntry);
 
 
 

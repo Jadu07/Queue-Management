@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { Text } from 'react-native-paper'
+import { Text, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 
@@ -18,19 +18,27 @@ const HomeWaitingList = ({ refreshTrigger }) => {
         })
     }, [refreshTrigger])
 
+    const prioritize = async (id) => {
+        const token = await AsyncStorage.getItem('token')
+        await axios.post(`http://localhost:4000/admin/prioritize/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+        const res = await axios.get('http://localhost:4000/admin/waiting', { headers: { Authorization: `Bearer ${token}` } })
+        setList(res.data.data)
+    }
+
     if (loading && !list.length) return <View style={styles.section}><Text style={styles.title}>Waiting List</Text><Text style={styles.empty}>Loading...</Text></View>
 
     return (
         <View style={styles.section}>
-            <Text style={styles.title}>Waiting List ({list.length})</Text>
+            <Text style={styles.title}>Waiting List</Text>
             {!list.length ? (
                 <View style={styles.emptyBox}><Text style={styles.empty}>No one is waiting</Text></View>
             ) : (
                 <View style={styles.list}>
-                    <FlatList data={list} keyExtractor={i => i.id.toString()} scrollEnabled={false} renderItem={({ item }) => (
+                    <FlatList data={list} keyExtractor={i => i.id.toString()} scrollEnabled={false} renderItem={({ item, index }) => (
                         <View style={styles.row}>
                             <View style={styles.badge}><Text style={styles.badgeTxt}>{item.daily_token_number}</Text></View>
                             <View style={styles.info}><Text style={styles.name}>{item.name}</Text><Text style={styles.phone}>{item.phone}</Text></View>
+                            {index > 0 && <IconButton icon="arrow-up-bold-circle" iconColor="#6750a4" size={24} onPress={() => prioritize(item.id)} />}
                         </View>
                     )} />
                 </View>

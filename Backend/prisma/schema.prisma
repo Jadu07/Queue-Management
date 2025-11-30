@@ -22,7 +22,9 @@ model QueueEntry {
   name        String
   phone       String
   status      QueueStatus @default(WAITING)
+  priority    Int         @default(0)
   createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt @default(now())
   business    Business?   @relation(fields: [businessId], references: [id])
   businessId  Int?
 }
