@@ -5,6 +5,9 @@ A full-stack queue management solution with **customer-facing web app**, **admin
 ---
 
 ## Live Demo  
+https://www.youtube.com/watch?v=Y-CP87FKIqk
+
+---
 
 https://github.com/user-attachments/assets/febe3925-f989-4ce6-a82b-2187dc694cea
 
