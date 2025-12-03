@@ -6,6 +6,10 @@ A full-stack queue management solution with **customer-facing web app**, **admin
 
 ## Live Demo  
 
+https://github.com/user-attachments/assets/febe3925-f989-4ce6-a82b-2187dc694cea
+
+
+
 - 🌐 **Customer Web App:** [queue-management-ten.vercel.app](https://queue-management-ten.vercel.app/)  
 - ⚙️ **Backend API (Serving Route):** [queue-management-6cgk.onrender.com/serving](https://queue-management-6cgk.onrender.com/serving)  
 
