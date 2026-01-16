@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Clock } from 'lucide-react';
 import './JoinForm.css';
 
 function JoinForm({ onJoin, currentServing, businessName, isLoading, joiningLoading }) {
@@ -26,7 +26,10 @@ function JoinForm({ onJoin, currentServing, businessName, isLoading, joiningLoad
         </div>
       ) : null}
       <div className="queue-status-card">
-        <h2 className="queue-title">Queue Status</h2>
+        <h2 className="queue-title">
+          <Clock style={{ width: '20px', height: '20px', marginRight: '0.5rem' }} />
+          Queue Status
+        </h2>
         <div className="queue-box">
           <h1 className="queue-number"># {currentServing || 0}</h1>
           <p className="queue-text">Now Serving</p>
@@ -34,7 +37,10 @@ function JoinForm({ onJoin, currentServing, businessName, isLoading, joiningLoad
       </div>
 
       <div className="queue-join-card">
-        <h2 className="join-title">Join the Queue</h2>
+        <h2 className="join-title">
+          <User style={{ width: '20px', height: '20px', marginRight: '0.5rem' }} />
+          Join the Queue
+        </h2>
         <form className="join-form" onSubmit={handleSubmit}>
           <label>Full Name</label>
           <input
@@ -65,6 +71,7 @@ function JoinForm({ onJoin, currentServing, businessName, isLoading, joiningLoad
             )}
           </button>
         </form>
+        <p className="privacy-note">Your information is kept private and secure.</p>
       </div>
     </div>
   );

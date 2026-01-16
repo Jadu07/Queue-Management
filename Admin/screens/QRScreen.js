@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { Button } from 'react-native-paper'
 import { useAuth } from '../context/AuthContext'
 import QRCode from 'react-native-qrcode-svg'
@@ -39,6 +39,8 @@ export default function QRScreen() {
       <Text style={styles.title}>JOINING CODE</Text>
       <Text style={styles.subtitle}>Scan this QR code to join the queue</Text>
       <QRCode value={url} size={300} />
+
+      <Text style={styles.url}>{url}</Text>
 
       <View style={styles.buttonContainer}>
         <Button mode="contained" onPress={handleShare} style={styles.button} icon="share-variant">
@@ -80,5 +82,11 @@ const styles = StyleSheet.create({
   },
   button: {
     minWidth: 120,
-  }
+  },
+  url: {
+    fontSize: 14,
+    marginTop: 20,
+    color: '#007bff',
+    textAlign: 'center',
+  },
 })

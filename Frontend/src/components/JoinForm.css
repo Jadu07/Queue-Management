@@ -54,6 +54,9 @@
     font-weight: 700;
     color: #0f172a;
     margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .queue-box {
@@ -112,6 +115,14 @@
   
   .join-btn:hover {
     background: linear-gradient(to right, #2563eb, #3b82f6);
+  }
+
+  .privacy-note {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 500;
   }
 
   @media (max-width: 640px) {
