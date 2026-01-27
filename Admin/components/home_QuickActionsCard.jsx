@@ -4,15 +4,17 @@ import { Text } from 'react-native-paper'
 import { MaterialIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
 const HomeQuickActionsCard = () => {
   const [nextEntry, setNextEntry] = useState(null)
+  const { backend_link } = useAuth()
 
   useEffect(() => {
     (async () => {
       const token = await AsyncStorage.getItem('token')
       if (token) {
-        const response = await axios.get('http://localhost:4000/admin/next-entry', {
+        const response = await axios.get(`${backend_link}/admin/next-entry`, {
           headers: { Authorization: `Bearer ${token}` }
         })
         setNextEntry(response.data.data)
@@ -41,7 +43,7 @@ const HomeQuickActionsCard = () => {
             </View>
           )}
         </View>
-  
+
       </View>
     </View>
   )
