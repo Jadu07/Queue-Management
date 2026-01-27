@@ -59,10 +59,10 @@ A functional system where customers can easily join and track their queue positi
 
 ## Features
 
-✅ Customers can join and track their position in the queue (Web)  
-✅ Admins can manage queue status in real time (Mobile)  
-✅ REST API with Prisma + Supabase integration  
-✅ Resets queue token numbers daily at Midnight 
+- Customers can join and track their position in the queue (Web)  
+- Admins can manage queue status in real time (Mobile)  
+- REST API with Prisma + Supabase integration  
+- Resets queue token numbers daily at Midnight 
 
 ---
 
